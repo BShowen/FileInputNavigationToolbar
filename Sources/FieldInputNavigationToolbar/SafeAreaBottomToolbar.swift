@@ -17,7 +17,7 @@ struct BottomToolbarModifier<ToolbarContent: View>: ViewModifier {
 				if isPresented {
 					self.content()
 						.frame(maxWidth: .infinity)
-						.padding()
+//						.padding()
 						.glassEffect(.regular.interactive())
 						.padding()
 				}

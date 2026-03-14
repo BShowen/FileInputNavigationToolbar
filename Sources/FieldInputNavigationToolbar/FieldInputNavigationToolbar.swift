@@ -37,48 +37,33 @@ public struct FieldInputNavigationToolbar<Field: FocusField>: ViewModifier where
 	var hasNext: Bool {
 		self.nextField != nil
 	}
-		
+	
 	public func body(content: Content) -> some View {
 		return content
 			.safeAreaBottomToolbar(isPresented: focusField.wrappedValue != nil){
 				HStack {
-					HStack(spacing: 30) {
-						Button {
-							focusField.wrappedValue = previousField
-						} label: {
-							Image(systemName: "chevron.up")
-								.resizable()
-								.scaledToFit()
-								.frame(width: 20, height: 20)
-						}
-						.buttonStyle(.plain)
-						.contentShape(Rectangle().size(CGSize(width: 44, height: 44)))
-						.disabled(!hasPrevious)
+					HStack {
+						ToolbarButton(
+							isDisabled: !hasPrevious,
+							onTap: { focusField.wrappedValue = previousField },
+							systemImage: "chevron.up"
+						)
 						
-						Button {
-							focusField.wrappedValue = nextField
-						} label: {
-							Image(systemName: "chevron.down")
-								.resizable()
-								.scaledToFit()
-								.frame(width: 20, height: 20)
-						}
-						.buttonStyle(.plain)
-						.contentShape(Rectangle().size(CGSize(width: 44, height: 44)))
-						.disabled(!hasNext)
+						ToolbarButton(
+							isDisabled: !hasNext,
+							onTap: { focusField.wrappedValue = nextField },
+							systemImage: "chevron.down"
+						)
+					
 					}
 					
 					Spacer()
 					
-					Button {
-						focusField.wrappedValue = nil
-					} label: {
-						Image(systemName: "checkmark")
-							.resizable()
-							.scaledToFit()
-							.frame(width: 20, height: 20)
-					}
-					.buttonStyle(.plain)
+					ToolbarButton(
+						isDisabled: false,
+						onTap: { focusField.wrappedValue = nil },
+						systemImage: "checkmark"
+					)
 					
 				}
 			}
@@ -89,5 +74,30 @@ public extension View {
 	func fieldInputNavigationToolbar<Field: FocusField>(focusField: FocusState<Field?>.Binding) -> some View where Field.AllCases: RandomAccessCollection {
 		self.modifier(FieldInputNavigationToolbar(focusField: focusField))
 	}
+}
+
+struct ContentView: View {
+	enum FocusFields: Hashable, CaseIterable {
+		case first, last
+	}
+	
+	@FocusState private var currentField: FocusFields?
+	@State private var firstName: String = ""
+	@State private var lastName: String = ""
+	
+	var body: some View {
+		Form {
+			TextField("First name", text: $firstName)
+				.focused($currentField, equals: .first)
+			
+			TextField("First name", text: $lastName)
+				.focused($currentField, equals: .last)
+		}
+		.fieldInputNavigationToolbar(focusField: $currentField)
+	}
+}
+
+#Preview {
+	ContentView()
 }
 
