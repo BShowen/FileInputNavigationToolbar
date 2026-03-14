@@ -11,12 +11,6 @@ struct BottomToolbarModifier<ToolbarContent: View>: ViewModifier {
 	let isPresented: Bool
 	@ViewBuilder let content: () -> ToolbarContent
 	
-	
-	init(isPresented: Bool, content: @escaping () -> ToolbarContent) {
-		self.isPresented = isPresented
-		self.content = content
-	}
-	
 	func body(content mainContent: Content) -> some View {
 		mainContent
 			.safeAreaInset(edge: .bottom) {

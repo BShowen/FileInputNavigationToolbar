@@ -5,7 +5,7 @@ import SwiftUI
 
 public typealias FocusField = Hashable & CaseIterable
 
-public struct KeyboardToolbarModifier<Field: FocusField>: ViewModifier where Field.AllCases: RandomAccessCollection  {
+public struct FieldInputNavigationToolbar<Field: FocusField>: ViewModifier where Field.AllCases: RandomAccessCollection  {
 	
 	
 	typealias FocusStateBinding = FocusState<Field?>.Binding
@@ -86,8 +86,8 @@ public struct KeyboardToolbarModifier<Field: FocusField>: ViewModifier where Fie
 }
 
 public extension View {
-	func keyboardToolbarNavigation<Field: FocusField>(focusField: FocusState<Field?>.Binding) -> some View where Field.AllCases: RandomAccessCollection {
-		self.modifier(KeyboardToolbarModifier(focusField: focusField))
+	func fieldInputNavigationToolbar<Field: FocusField>(focusField: FocusState<Field?>.Binding) -> some View where Field.AllCases: RandomAccessCollection {
+		self.modifier(FieldInputNavigationToolbar(focusField: focusField))
 	}
 }
 
